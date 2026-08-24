@@ -32,4 +32,9 @@ public class AuthController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<String> getMyInfo(@org.springframework.security.core.annotation.AuthenticationPrincipal String username) {
+        return ResponseEntity.ok("현재 로그인된 유저: " + username);
+    }
 }

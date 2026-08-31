@@ -1,6 +1,7 @@
 package com.holiday;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -34,7 +35,10 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<String> getMyInfo(@org.springframework.security.core.annotation.AuthenticationPrincipal String username) {
-        return ResponseEntity.ok("현재 로그인된 유저: " + username);
+    public ResponseEntity<String> getMyInfo(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getName())) {
+            return ResponseEntity.status(401).body("인증되지 않은 사용자입니다.");
+        }
+        return ResponseEntity.ok("현재 로그인된 유저: " + authentication.getName());
     }
 }
